@@ -4,7 +4,7 @@
 |--------|--------|
 | Document ID | SEC-010 |
 | Version | 1.0.0 |
-| Status | Approved |
+| Status | Draft |
 | Owner | Business Continuity Team |
 | Last Updated | July 2026 |
 

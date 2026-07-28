@@ -4,7 +4,7 @@
 |--------|--------|
 | Document ID | ARCH-004 |
 | Version | 1.0.0 |
-| Status | Approved |
+| Status | Draft |
 | Owner | Security Architecture Team |
 | Last Updated | July 2026 |
 
@@ -36,7 +36,7 @@
 ## Related Documents
 
 - SEC-001 Security Policy
-- SEC-002 Threat Model
+- SEC-002 Authentication & Authorization
 - SEC-003 Audit Plan
 - ARCH-002 Backend Architecture
 - ARCH-003 Database Architecture

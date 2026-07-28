@@ -4,7 +4,7 @@
 |--------|--------|
 | Document ID | PROJECT-000 |
 | Version | 1.0.0 |
-| Status | Approved |
+| Status | Draft |
 | Owner | Project Management Team |
 | Last Updated | July 2026 |
 
@@ -40,6 +40,7 @@ Documents should be read in the following order:
 2. PROJECT-002 Project Vision
 3. PROJECT-003 Project Goals
 4. PROJECT-004 Project Roadmap
+5. PROJECT-005 Consistency Review
 
 Each document builds upon the previous one.
 
@@ -53,6 +54,7 @@ Each document builds upon the previous one.
 | PROJECT-002 | PROJECT-002_VISION.md | Defines the long-term vision of the platform. |
 | PROJECT-003 | PROJECT-003_GOALS.md | Defines strategic, business and technical goals. |
 | PROJECT-004 | PROJECT-004_ROADMAP.md | Defines the phased development roadmap. |
+| PROJECT-005 | PROJECT-005_CONSISTENCY_REVIEW.md | Records resolved documentation consistency issues. |
 
 ---
 

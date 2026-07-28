@@ -4,7 +4,7 @@
 |--------|--------|
 | Document ID | FIN-002 |
 | Version | 1.0.0 |
-| Status | Approved |
+| Status | Draft |
 | Owner | Financial Architecture Team |
 | Last Updated | July 2026 |
 
@@ -37,7 +37,7 @@
 - FIN-004 Withdrawal Rules
 - ARCH-003 Database Architecture
 - ARCH-005 API Design
-- SEC-002 Threat Model
+- SEC-005 API Security
 
 ---
 

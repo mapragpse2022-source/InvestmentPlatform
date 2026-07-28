@@ -4,7 +4,7 @@
 |--------|--------|
 | Document ID | PROJECT-001 |
 | Version | 1.0.0 |
-| Status | Approved |
+| Status | Draft |
 | Owner | Project Management Team |
 | Last Updated | July 2026 |
 
@@ -33,7 +33,7 @@ None
 - PROJECT-002 Vision
 - PROJECT-003 Goals
 - PROJECT-004 Roadmap
-- PRD-001 Product Requirements
+- PRODUCT-001 Product Requirements
 
 ---
 

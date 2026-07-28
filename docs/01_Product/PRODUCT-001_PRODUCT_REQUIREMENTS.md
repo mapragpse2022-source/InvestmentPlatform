@@ -4,7 +4,7 @@
 |--------|--------|
 | Document ID | PRODUCT-001 |
 | Version | 1.0.0 |
-| Status | Approved |
+| Status | Draft |
 | Owner | Product Management Team |
 | Last Updated | July 2026 |
 

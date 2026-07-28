@@ -4,7 +4,7 @@
 |--------|--------|
 | Document ID | OPS-001 |
 | Version | 1.0.0 |
-| Status | Approved |
+| Status | Draft |
 | Owner | Operations Team |
 | Last Updated | July 2026 |
 

@@ -4,7 +4,7 @@
 |--------|--------|
 | Document ID | DOC-000 |
 | Version | 1.0.0 |
-| Status | Approved |
+| Status | Draft |
 | Owner | Documentation Team |
 | Last Updated | July 2026 |
 
@@ -42,6 +42,7 @@ docs/
 04_UI_UX/
 05_Development/
 06_Security/
+07_Operations/
 ```
 
 ---
@@ -135,8 +136,14 @@ Contains all security-related documentation.
 Includes:
 
 - Security Policy
-- Threat Model
-- Audit Plan
+- Authentication & Authorization
+- Audit & Compliance
+
+---
+
+## 07_Operations
+
+Contains operational governance, monitoring, maintenance, capacity, runbooks, service-level, and service-catalogue documentation.
 
 ---
 
@@ -202,6 +209,7 @@ AI coding assistants must:
 | 04_UI_UX | Design Team |
 | 05_Development | Engineering Team |
 | 06_Security | Security Team |
+| 07_Operations | Operations Team |
 
 ---
 

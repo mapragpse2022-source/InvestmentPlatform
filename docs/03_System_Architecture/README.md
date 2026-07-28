@@ -4,7 +4,7 @@
 |--------|--------|
 | Document ID | ARCH-000 |
 | Version | 1.0.0 |
-| Status | Approved |
+| Status | Draft |
 | Owner | System Architecture Team |
 | Last Updated | July 2026 |
 

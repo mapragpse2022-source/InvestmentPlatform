@@ -4,7 +4,7 @@
 |--------|--------|
 | Document ID | DEV-002 |
 | Version | 1.0.0 |
-| Status | Approved |
+| Status | Draft |
 | Owner | Engineering Team |
 | Last Updated | July 2026 |
 

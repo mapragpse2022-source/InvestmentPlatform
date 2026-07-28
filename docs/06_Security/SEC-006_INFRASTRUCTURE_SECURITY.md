@@ -4,7 +4,7 @@
 |--------|--------|
 | Document ID | SEC-006 |
 | Version | 1.0.0 |
-| Status | Approved |
+| Status | Draft |
 | Owner | Infrastructure Security Team |
 | Last Updated | July 2026 |
 
