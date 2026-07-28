@@ -4,7 +4,7 @@
 |--------|--------|
 | Document ID | SEC-011 |
 | Version | 1.0.0 |
-| Status | Approved |
+| Status | Draft |
 | Owner | Security Governance Team |
 | Last Updated | July 2026 |
 

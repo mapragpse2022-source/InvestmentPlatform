@@ -9,7 +9,7 @@ A next-generation digital investment platform designed to provide secure, transp
 | Project Name | Digital Investment Platform |
 | Project Status | Documentation Phase |
 | Version | 1.0.0 |
-| Documentation Status | Initial Setup |
+| Documentation Status | Draft / pending approval |
 | Last Updated | July 2026 |
 
 ---
@@ -174,13 +174,11 @@ docs/
 
 04_UI_UX
 
-05_Backend
+05_Development
 
 06_Security
 
-07_Deployment
-
-08_Testing
+07_Operations
 ```
 
 ---

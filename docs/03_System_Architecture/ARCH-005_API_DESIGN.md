@@ -4,7 +4,7 @@
 |--------|--------|
 | Document ID | ARCH-005 |
 | Version | 1.0.0 |
-| Status | Approved |
+| Status | Draft |
 | Owner | API Architecture Team |
 | Last Updated | July 2026 |
 
@@ -338,12 +338,17 @@ Investment rule violation
 
 Financial APIs require additional protection.
 
-Sensitive operations:
+Sensitive client operations:
 
 - Create investment
-- Confirm deposit
 - Request withdrawal
-- Update balance
+
+System-only financial operations:
+
+- Confirm a deposit after blockchain verification
+- Post a balance movement through the financial ledger
+
+System-only financial operations must not be exposed as client-accessible endpoints. They may be invoked only by an authenticated internal worker or an explicitly authorized operator workflow, and must enforce idempotency and audit logging.
 
 must require:
 

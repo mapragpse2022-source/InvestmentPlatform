@@ -4,7 +4,7 @@
 |--------|--------|
 | Document ID | SEC-007 |
 | Version | 1.0.0 |
-| Status | Approved |
+| Status | Draft |
 | Owner | Security Operations Team |
 | Last Updated | July 2026 |
 

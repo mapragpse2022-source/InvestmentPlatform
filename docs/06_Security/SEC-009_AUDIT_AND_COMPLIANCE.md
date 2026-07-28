@@ -4,7 +4,7 @@
 |--------|--------|
 | Document ID | SEC-009 |
 | Version | 1.0.0 |
-| Status | Approved |
+| Status | Draft |
 | Owner | Governance & Compliance Team |
 | Last Updated | July 2026 |
 

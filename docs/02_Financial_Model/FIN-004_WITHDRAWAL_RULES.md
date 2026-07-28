@@ -4,7 +4,7 @@
 |--------|--------|
 | Document ID | FIN-004 |
 | Version | 1.0.0 |
-| Status | Approved |
+| Status | Draft |
 | Owner | Financial Architecture Team |
 | Last Updated | July 2026 |
 

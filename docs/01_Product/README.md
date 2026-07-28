@@ -4,7 +4,7 @@
 |--------|--------|
 | Document ID | PRODUCT-000 |
 | Version | 1.0.0 |
-| Status | Approved |
+| Status | Draft |
 | Owner | Product Management Team |
 | Last Updated | July 2026 |
 
@@ -33,7 +33,7 @@
 
 ## Related Documents
 
-- PRD-001 Product Requirements
+- PRODUCT-001 Product Requirements
 - PRD-002 User Personas
 - PRD-003 User Stories
 - PRD-004 Business Rules
@@ -67,7 +67,7 @@ The objectives of this documentation are:
 
 The recommended reading order is:
 
-1. PRD-001 Product Requirements
+1. PRODUCT-001 Product Requirements
 2. PRD-002 User Personas
 3. PRD-003 User Stories
 4. PRD-004 Business Rules
@@ -80,7 +80,7 @@ Each document depends on the previous one.
 
 | Document ID | File | Description |
 |-------------|------|-------------|
-| PRD-001 | PRD-001_PRODUCT_REQUIREMENTS.md | Defines the complete product requirements. |
+| PRODUCT-001 | PRODUCT-001_PRODUCT_REQUIREMENTS.md | Defines the complete product requirements. |
 | PRD-002 | PRD-002_USER_PERSONAS.md | Defines target users and customer profiles. |
 | PRD-003 | PRD-003_USER_STORIES.md | Defines user interactions and workflows. |
 | PRD-004 | PRD-004_BUSINESS_RULES.md | Defines platform business rules. |
