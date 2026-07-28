@@ -41,6 +41,7 @@ Documents should be read in the following order:
 3. PROJECT-003 Project Goals
 4. PROJECT-004 Project Roadmap
 5. PROJECT-005 Consistency Review
+6. PROJECT-006 MVP Implementation Plan
 
 Each document builds upon the previous one.
 
@@ -55,6 +56,7 @@ Each document builds upon the previous one.
 | PROJECT-003 | PROJECT-003_GOALS.md | Defines strategic, business and technical goals. |
 | PROJECT-004 | PROJECT-004_ROADMAP.md | Defines the phased development roadmap. |
 | PROJECT-005 | PROJECT-005_CONSISTENCY_REVIEW.md | Records resolved documentation consistency issues. |
+| PROJECT-006 | PROJECT-006_MVP_IMPLEMENTATION_PLAN.md | Defines the proposed Phase 1 MVP scope, technical baseline, and approval gate. |
 
 ---
 
