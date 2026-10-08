@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>داشبورد | دستیار ترید</title>
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body class="dash-body">
+
+  <!-- ================= Sidebar ================= -->
+  <aside class="sidebar" id="sidebar">
+    <a href="index.html" class="brand side-brand">
+      <span class="brand-icon">🤖</span>
+      <span class="brand-text">دستیار<b>ترید</b></span>
+    </a>
+
+    <nav class="side-nav">
+      <button class="side-link active" data-view="overview">📊 نمای کلی</button>
+      <button class="side-link" data-view="positions">📈 پوزیشن‌های باز</button>
+      <button class="side-link" data-view="history">🧾 تاریخچه معاملات</button>
+      <button class="side-link" data-view="settings">⚙️ تنظیمات ربات</button>
+    </nav>
+
+    <div class="side-foot">
+      <div class="user-chip">
+        <div class="avatar" id="userAvatar">?</div>
+        <div class="user-meta">
+          <div class="user-name" id="userName">کاربر مهمان</div>
+          <div class="user-plan">پلن: پایه</div>
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-sm btn-block" id="logoutBtn">خروج</button>
+    </div>
+  </aside>
+
+  <!-- ================= Main ================= -->
+  <div class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <button class="burger" id="burger">☰</button>
+      <h2 class="page-title" id="pageTitle">نمای کلی</h2>
+
+      <div class="topbar-right">
+        <label class="bot-switch" title="روشن/خاموش کردن ربات">
+          <span id="botSwitchLabel">ربات: فعال</span>
+          <input type="checkbox" id="botToggle" checked />
+          <i class="slider"></i>
+        </label>
+        <span class="live-dot">● زنده</span>
+      </div>
+    </header>
+
+    <!-- ============ VIEW: Overview ============ -->
+    <section class="view" data-view="overview">
+      <div class="kpis">
+        <div class="kpi">
+          <span class="kpi-label">ارزش دارایی (USDT)</span>
+          <strong class="kpi-value" id="kpiBalance" dir="ltr">$0.00</strong>
+          <span class="kpi-delta up" id="kpiBalanceDelta">▲ +۰٪ امروز</span>
+        </div>
+        <div class="kpi">
+          <span class="kpi-label">سود کل</span>
+          <strong class="kpi-value pos" id="kpiPnl">$0.00</strong>
+          <span class="kpi-delta muted-line">از ابتدای فعالیت</span>
+        </div>
+        <div class="kpi">
+          <span class="kpi-label">معاملات امروز</span>
+          <strong class="kpi-value" id="kpiTrades">۰</strong>
+          <span class="kpi-delta muted-line">بسته‌شده</span>
+        </div>
+        <div class="kpi">
+          <span class="kpi-label">نرخ برد</span>
+          <strong class="kpi-value" id="kpiWinrate">۰٪</strong>
+          <span class="kpi-delta muted-line">۳۰ روز اخیر</span>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel chart-panel">
+          <div class="panel-head">
+            <h3>عملکرد دارایی — ۳۰ روز اخیر</h3>
+            <select id="chartRange" class="mini-select">
+              <option value="7">۷ روز</option>
+              <option value="30" selected>۳۰ روز</option>
+              <option value="90">۹۰ روز</option>
+            </select>
+          </div>
+          <canvas id="equityChart" height="260"></canvas>
+        </div>
+
+        <div class="panel bot-card">
+          <div class="panel-head"><h3>وضعیت ربات</h3></div>
+          <div class="bot-status" id="botStatusBox">
+            <div class="status-big on" id="botBigStatus">● در حال اجرا</div>
+            <ul class="bot-facts">
+              <li><span>صرافی متصل</span><strong id="botExchange" dir="ltr">Binance</strong></li>
+              <li><span>استراتژی</span><strong>متعادل (Mid-Risk)</strong></li>
+              <li><span>حداکثر ریسک روزانه</span><strong>۳٪</strong></li>
+              <li><span>آخرین معامله</span><strong id="lastTradeTime">—</strong></li>
+            </ul>
+            <button class="btn btn-primary btn-block" id="pauseBtn">⏸ توقف فوری ربات</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h3>تغییرات لحظه‌ای بازار</h3></div>
+        <div class="ticker-strip" id="tickerStrip"><!-- JS fills --></div>
+      </div>
+    </section>
+
+    <!-- ============ VIEW: Open Positions ============ -->
+    <section class="view" data-view="positions" hidden>
+      <div class="panel">
+        <div class="panel-head"><h3>پوزیشن‌های باز</h3><span class="muted-note" id="openCount"></span></div>
+        <div class="table-wrap">
+          <table class="dtable">
+            <thead>
+              <tr>
+                <th>جفت‌ارز</th><th>جهت</th><th>حجم (USDT)</th><th>قیمت ورود</th>
+                <th>قیمت فعلی</th><th>سود/زیان</th><th>حد ضرر</th><th></th>
+              </tr>
+            </thead>
+            <tbody id="positionsBody"><!-- JS fills --></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ VIEW: History ============ -->
+    <section class="view" data-view="history" hidden>
+      <div class="panel">
+        <div class="panel-head">
+          <h3>تاریخچه معاملات بسته‌شده</h3>
+          <button class="btn btn-ghost btn-sm" id="exportCsv">⬇ خروجی CSV</button>
+        </div>
+        <div class="table-wrap">
+          <table class="dtable">
+            <thead>
+              <tr><th>زمان</th><th>جفت‌ارز</th><th>جهت</th><th>حجم</th><th>سود/زیان</th><th>درصد</th><th>استراتژی</th></tr>
+            </thead>
+            <tbody id="historyBody"><!-- JS fills --></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ VIEW: Settings ============ -->
+    <section class="view" data-view="settings" hidden>
+      <div class="panel settings-panel">
+        <div class="panel-head"><h3>تنظیمات استراتژی و ریسک</h3></div>
+
+        <div class="settings-grid">
+          <div class="field">
+            <label>سطح ریسک</label>
+            <div class="seg" id="riskSeg">
+              <button data-risk="conservative">محافظه‌کار</button>
+              <button data-risk="balanced" class="on">متعادل</button>
+              <button data-risk="aggressive">تهاجمی</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="maxDaily">حداکثر ریسک روزانه (<span id="maxDailyVal">۳</span>٪)</label>
+            <input type="range" id="maxDaily" min="1" max="10" value="3" />
+          </div>
+
+          <div class="field">
+            <label for="stopLoss">حد ضرر هر معامله (<span id="stopLossVal">۲</span>٪)</label>
+            <input type="range" id="stopLoss" min="1" max="8" value="2" />
+          </div>
+
+          <div class="field">
+            <label>جفت‌ارزهای فعال</label>
+            <div class="pairs" id="pairsBox">
+              <label class="pair on"><input type="checkbox" checked />BTC/USDT</label>
+              <label class="pair on"><input type="checkbox" checked />ETH/USDT</label>
+              <label class="pair"><input type="checkbox" />SOL/USDT</label>
+              <label class="pair"><input type="checkbox" />BNB/USDT</label>
+              <label class="pair"><input type="checkbox" />XRP/USDT</label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>اعلان‌ها</label>
+            <label class="checkline"><input type="checkbox" id="notifEmail" checked /> ایمیل برای هر معامله</label>
+            <label class="checkline"><input type="checkbox" id="notifTg" checked /> تلگرام برای رویدادهای مهم</label>
+          </div>
+        </div>
+
+        <div class="save-row">
+          <button class="btn btn-primary" id="saveSettings">ذخیره تغییرات</button>
+          <span class="saved-note" id="savedNote"></span>
+        </div>
+      </div>
+    </section>
+
+    <footer class="dash-foot">
+      ⚠️ داده‌های این داشبورد در حالت دمو شبیه‌سازی می‌شوند. ترید ارز دیجیتال دارای ریسک است؛ عملکرد گذشته تضمین‌کننده آینده نیست.
+    </footer>
+  </div>
+
+  <!-- Login modal (for dashboard.html?login=1) -->
+  <div class="modal-backdrop" id="loginModal" hidden>
+    <div class="modal">
+      <h3>ورود به حساب</h3>
+      <div class="field">
+        <label for="loginEmail">ایمیل</label>
+        <input type="email" id="loginEmail" dir="ltr" placeholder="you@example.com" />
+      </div>
+      <div class="field">
+        <label for="loginPass">رمز عبور</label>
+        <input type="password" id="loginPass" placeholder="••••••••" />
+      </div>
+      <span class="error" id="loginError"></span>
+      <div class="modal-actions">
+        <a href="signup.html" class="btn btn-ghost">ثبت‌نام</a>
+        <button class="btn btn-primary" id="loginSubmit">ورود</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
