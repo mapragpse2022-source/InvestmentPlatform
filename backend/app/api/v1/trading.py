@@ -18,7 +18,8 @@ class SettingsIn(BaseModel):
     risk: str | None = None
     stop_loss_pct: float | None = Field(None, ge=1, le=8)
     max_daily_risk_pct: float | None = Field(None, ge=1, le=10)
-    pairs: list[str] | None = None
+    symbol: str | None = None      # gold-only bot; kept for forward-compat
+    pairs: list[str] | None = None  # legacy clients
 
 
 class RunningIn(BaseModel):
@@ -44,7 +45,7 @@ def close_position(position_id: str, user: UserOut = Depends(get_current_user)):
             d = 1 if pos["side"] == "long" else -1
             pnl_pct = d * (cur / pos["entry_price"] - 1)
             simulator._close_position(st, pos, cur, pnl_pct)
-            return {"ok": True, "pnl_usdt": pos.get("pnl_usdt", 0)}
+            return {"ok": True, "pnl_usd": pos.get("pnl_usd", 0)}
     return {"ok": False, "message": "پوزیشن یافت نشد یا بسته شده است"}
 
 

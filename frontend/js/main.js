@@ -33,7 +33,7 @@ if (menuToggle && navLinks) {
 
   // Generate a random-walk upward series
   const points = [];
-  let v = 40;
+  let v = 40; // normalized series; rendered on relative scale
   for (let i = 0; i < 60; i++) {
     v += Math.random() * 9 - 3.6 + i * 0.18; // slight upward drift
     points.push(v);

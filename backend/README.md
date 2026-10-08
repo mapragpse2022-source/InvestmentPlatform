@@ -65,6 +65,6 @@ backend/
 
 ## فاز بعدی
 
-- اتصال صرافی (ccxt) + وب‌سوکت قیمت‌ها
+- اتصال MetaTrader 5 (پل MT5↔Python via `MetaTrader5` package) + فید قیمت واقعی XAUUSD
 - ذخیره معاملات واقعی و KPIهای سرور-سمت
 - Deploy: Render / Railway / VPS + Docker

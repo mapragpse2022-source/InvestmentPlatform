@@ -23,7 +23,7 @@ function closeLogin() { loginModal.hidden = true; }
 if (!user && params.get("login") === "1") openLogin();
 if (!user && !params.get("login")) {
   // مهمان: با کاربر دمو ادامه می‌دهیم (دمو — در نسخه واقعی redirect به signup می‌شود)
-  user = { fullName: "کاربر مهمان", email: "guest@demo.local", exchange: "binance" };
+  user = { fullName: "کاربر مهمان", email: "guest@demo.local", exchange: "mt5" };
 } else if (Auth.isLogged()) {
   // validate token against backend; refresh display name from server
   Api.me().then((fresh) => {
@@ -47,7 +47,7 @@ document.getElementById("loginSubmit").addEventListener("click", async () => {
     const session = await Api.login({ email, password: pass });
     Auth.save(session);
     user = { fullName: session.user.full_name, email: session.user.email,
-             exchange: (JSON.parse(localStorage.getItem("dt_exchange") || "{}").exchange) || "binance" };
+             exchange: (JSON.parse(localStorage.getItem("dt_exchange") || "{}").exchange) || "mt5" };
     closeLogin();
     renderUser();
   } catch (err) {
@@ -69,8 +69,7 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
 function renderUser() {
   document.getElementById("userName").textContent = user.fullName || user.email;
   document.getElementById("userAvatar").textContent = (user.fullName || user.email || "؟").trim()[0];
-  const exMap = { binance: "Binance", bybit: "Bybit", kucoin: "KuCoin" };
-  document.getElementById("botExchange").textContent = exMap[user.exchange] || "Binance";
+  document.getElementById("botExchange").textContent = "MetaTrader 5";
 }
 
 /* ================= View switching ================= */
@@ -109,30 +108,30 @@ document.getElementById("pauseBtn").addEventListener("click", () => {
 applyBotState();
 
 /* ================= Simulated market data ================= */
+/* Gold-only bot: XAUUSD + reference context symbols (not traded) */
 const MARKET = [
-  { pair: "BTC/USDT", price: 67450, vol: 0.9 },
-  { pair: "ETH/USDT", price: 3520, vol: 1.2 },
-  { pair: "SOL/USDT", price: 178, vol: 2.0 },
-  { pair: "BNB/USDT", price: 592, vol: 0.8 },
-  { pair: "XRP/USDT", price: 0.62, vol: 1.6 },
+  { pair: "XAUUSD", price: 4010.0, vol: 0.6, gold: true },
+  { pair: "DXY", price: 100.4, vol: 0.2, ref: true },
+  { pair: "US10Y", price: 4.21, vol: 0.3, ref: true },
+  { pair: "XAGUSD", price: 47.8, vol: 1.1, ref: true },
 ];
 MARKET.forEach((m) => (m.open24h = m.price * (1 - (Math.random() * 4 - 1.6) / 100)));
 
+/* Sizes are MT5 lots on XAUUSD (1 lot = 100 oz of gold) */
 const POSITIONS = [
-  { id: 1, pair: "BTC/USDT", side: "LONG", size: 850, entry: 66100, sl: 64800 },
-  { id: 2, pair: "ETH/USDT", side: "LONG", size: 600, entry: 3410, sl: 3340 },
-  { id: 3, pair: "SOL/USDT", side: "SHORT", size: 400, entry: 184, sl: 190 },
+  { id: 1, pair: "XAUUSD", side: "LONG", size: 0.20, entry: 3985.5, sl: 3968.0 },
+  { id: 2, pair: "XAUUSD", side: "SHORT", size: 0.10, entry: 4022.0, sl: 4035.5 },
 ];
 
 const HISTORY = Array.from({ length: 14 }, (_, i) => {
   const win = Math.random() < 0.72;
   const pct = +( (win ? 1 : -1) * (Math.random() * (win ? 3.5 : 2) + 0.3) ).toFixed(2);
-  const size = Math.round(Math.random() * 700 + 200);
-  const pnl = +((size * pct) / 100).toFixed(2);
+  const size = +(Math.random() * 0.4 + 0.05).toFixed(2);           // lots
+  const pnl = +(((pct / 100) * size * 100 * (3950 + Math.random() * 120)) / 1).toFixed(2); // $ per 100oz contract
   const d = new Date(Date.now() - (i + 1) * 3600e3 * (Math.random() * 6 + 2));
   return {
     time: d,
-    pair: MARKET[Math.floor(Math.random() * MARKET.length)].pair,
+    pair: "XAUUSD",
     side: Math.random() < 0.6 ? "LONG" : "SHORT",
     size, pnl, pct,
     strategy: ["متعادل", "میانگین‌گرایی", "شکن‌نما", "نوسان‌گیری"][Math.floor(Math.random() * 4)],
@@ -203,7 +202,7 @@ function renderKpis() {
   if (last) {
     document.getElementById("lastTradeTime").textContent =
       toFa(last.time.toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" })) +
-      " — " + last.pair;
+      " — " + (last.pair === "XAUUSD" ? "طلا" : last.pair);
   }
 }
 
@@ -214,7 +213,7 @@ function renderTicker() {
     const chg = ((m.price - m.open24h) / m.open24h) * 100;
     const up = chg >= 0;
     return `<div class="tick">
-      <div class="t-pair">${m.pair}</div>
+      <div class="t-pair">${m.pair}${m.gold ? " 🥇" : ""}</div>
       <div class="t-price">$${m.price.toLocaleString("en-US", { maximumFractionDigits: 4 })}</div>
       <div class="t-chg ${up ? "up" : "down"}">${up ? "▲" : "▼"} ${toFa(Math.abs(chg).toFixed(2))}٪</div>
     </div>`;
@@ -232,10 +231,10 @@ function renderPositions() {
     return `<tr data-id="${p.id}">
       <td dir="ltr" style="text-align:start"><b>${p.pair}</b></td>
       <td class="${p.side === "LONG" ? "dir-long" : "dir-short"}">${p.side === "LONG" ? "▲ خرید" : "▼ فروش"}</td>
-      <td dir="ltr">${fmtUSD(p.size)}</td>
+      <td dir="ltr">${toFa(p.size.toFixed(2))} لات</td>
       <td dir="ltr">$${p.entry.toLocaleString("en-US")}</td>
       <td dir="ltr">$${cur.toLocaleString("en-US", { maximumFractionDigits: 4 })}</td>
-      <td class="${pnl >= 0 ? "pnl-pos" : "pnl-neg"}">${pnl >= 0 ? "+" : ""}${pnl.toFixed(2)} USDT (${pct >= 0 ? "+" : ""}${pct.toFixed(2)}٪)</td>
+      <td class="${pnl >= 0 ? "pnl-pos" : "pnl-neg"}">${pnl >= 0 ? "+" : ""}${pnl.toFixed(2)} $ (${pct >= 0 ? "+" : ""}${pct.toFixed(2)}٪)</td>
       <td dir="ltr">$${p.sl.toLocaleString("en-US")}</td>
       <td><button class="btn-close-pos" data-close="${p.id}">بستن</button></td>
     </tr>`;
@@ -267,8 +266,8 @@ function renderHistory() {
       <td>${toFa(h.time.toLocaleString("fa-IR", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }))}</td>
       <td dir="ltr" style="text-align:start"><b>${h.pair}</b></td>
       <td class="${h.side === "LONG" ? "dir-long" : "dir-short"}">${h.side === "LONG" ? "▲ خرید" : "▼ فروش"}</td>
-      <td dir="ltr">${fmtUSD(h.size)}</td>
-      <td class="${h.pnl >= 0 ? "pnl-pos" : "pnl-neg"}">${h.pnl >= 0 ? "+" : ""}${h.pnl.toFixed(2)} USDT</td>
+      <td dir="ltr">${toFa(Number(h.size).toFixed(2))} لات</td>
+      <td class="${h.pnl >= 0 ? "pnl-pos" : "pnl-neg"}">${h.pnl >= 0 ? "+" : ""}${h.pnl.toFixed(2)} $</td>
       <td class="${h.pnl >= 0 ? "pnl-pos" : "pnl-neg"}">${h.pct >= 0 ? "+" : ""}${toFa(h.pct.toFixed(2))}٪</td>
       <td>${h.strategy}</td>
     </tr>`).join("");
@@ -276,7 +275,7 @@ function renderHistory() {
 
 /* ---------- CSV export ---------- */
 document.getElementById("exportCsv").addEventListener("click", () => {
-  const rows = [["time","pair","side","size_usdt","pnl_usdt","pnl_pct","strategy"],
+  const rows = [["time","symbol","side","lots","pnl_usd","pnl_pct","strategy"],
     ...HISTORY.map((h) => [h.time.toISOString(), h.pair, h.side, h.size, h.pnl, h.pct, h.strategy])];
   const csv = "\uFEFF" + rows.map((r) => r.join(",")).join("\n");
   const a = document.createElement("a");
@@ -412,6 +411,7 @@ document.getElementById("saveSettings").addEventListener("click", () => {
   const risk = document.querySelector("#riskSeg button.on")?.dataset.risk || "balanced";
   const settings = {
     risk,
+    symbol: "XAUUSD", // gold-only bot (MT5)
     maxDaily: document.getElementById("maxDaily").value,
     stopLoss: document.getElementById("stopLoss").value,
     notifEmail: document.getElementById("notifEmail").checked,

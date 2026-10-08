@@ -19,7 +19,7 @@
     <ol class="steps" id="stepsBar">
       <li class="step active" data-step="1">حساب کاربری</li>
       <li class="step" data-step="2">احراز هویت</li>
-      <li class="step" data-step="3">اتصال صرافی</li>
+      <li class="step" data-step="3">اتصال متاتریدر ۵</li>
     </ol>
 
     <form id="signupForm" novalidate>
@@ -92,33 +92,31 @@
 
       <!-- ============ STEP 3: Exchange connection ============ -->
       <section class="form-step" data-step="3" hidden>
-        <h1>اتصال به صرافی</h1>
-        <p class="muted">کلید API <b>فقط-معامله‌ای</b> خود را وارد کنید. دسترسی برداشت باید بسته باشد — در غیر این صورت ذخیره نمی‌شود.</p>
+        <h1>اتصال حساب متاتریدر ۵</h1>
+        <p class="muted">اطلاعات حساب MT5 بروکر خود را وارد کنید. ربات فقط روی نماد طلا (XAUUSD) معامله می‌کند و هیچ دسترسی به برداشت ندارد.</p>
 
         <div class="field">
-          <label>صرافی</label>
+          <label>پلتفرم</label>
           <div class="exchange-pick">
-            <label class="pick"><input type="radio" name="exchange" value="binance" checked /><span>Binance</span></label>
-            <label class="pick"><input type="radio" name="exchange" value="bybit" /><span>Bybit</span></label>
-            <label class="pick"><input type="radio" name="exchange" value="kucoin" /><span>KuCoin</span></label>
+            <label class="pick"><input type="radio" name="exchange" value="mt5" checked /><span>MetaTrader 5</span></label>
           </div>
         </div>
 
         <div class="field">
-          <label for="apiKey">API Key</label>
-          <input type="text" id="apiKey" dir="ltr" placeholder="Key از پنل صرافی" autocomplete="off" />
+          <label for="apiKey">شماره حساب (Login)</label>
+          <input type="text" id="apiKey" dir="ltr" placeholder="مثلاً ۵۱۲۳۴۵۶۷" autocomplete="off" inputmode="numeric" />
           <span class="error" data-error-for="apiKey"></span>
         </div>
 
         <div class="field">
-          <label for="apiSecret">API Secret</label>
-          <input type="password" id="apiSecret" dir="ltr" placeholder="Secret از پنل صرافی" autocomplete="off" />
+          <label for="apiSecret">نام سرور بروکر</label>
+          <input type="text" id="apiSecret" dir="ltr" placeholder="مثلاً ICMarkets-Live02" autocomplete="off" />
           <span class="error" data-error-for="apiSecret"></span>
         </div>
 
         <label class="checkbox">
           <input type="checkbox" id="noWithdraw" required checked />
-          <span>تأیید می‌کنم که این کلید <b>مجوز برداشت ندارد</b>.</span>
+          <span>تأیید می‌کنم ربات را فقط روی چارت <b>XAUUSD (طلا)</b> فعال می‌کنم.</span>
         </label>
         <span class="error" data-error-for="noWithdraw"></span>
 

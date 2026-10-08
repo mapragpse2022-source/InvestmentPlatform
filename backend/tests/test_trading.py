@@ -1,4 +1,4 @@
-"""End-to-end tests for the Phase-5 trading endpoints (demo simulator)."""
+"""End-to-end tests for the trading endpoints (MT5 gold demo simulator)."""
 import os
 import tempfile
 
@@ -37,21 +37,30 @@ def test_overview_shape():
     r = client.get("/api/v1/trading/overview", headers=H(tok))
     assert r.status_code == 200
     data = r.json()
-    for key in ("running", "balance_usdt", "equity_series", "prices", "win_rate_pct"):
+    for key in ("running", "balance_usd", "equity_series", "prices",
+                "win_rate_pct", "platform", "symbol"):
         assert key in data
     assert len(data["equity_series"]) >= 1
-    assert data["prices"]["BTC/USDT"] > 0
+    # gold-only bot on MetaTrader 5
+    assert data["platform"] == "MetaTrader 5"
+    assert data["symbol"] == "XAUUSD"
+    assert list(data["prices"].keys()) == ["XAUUSD"]
+    assert data["prices"]["XAUUSD"] > 3000
 
 
 def test_settings_roundtrip_and_validation():
     tok = _token("sam@example.com")
     body = {"risk": "aggressive", "stop_loss_pct": 3,
-            "max_daily_risk_pct": 5, "pairs": ["SOL/USDT"]}
+            "max_daily_risk_pct": 5, "symbol": "XAUUSD"}
     r = client.put("/api/v1/trading/settings", json=body, headers=H(tok))
     assert r.status_code == 200
     assert r.json()["risk"] == "aggressive"
     r = client.get("/api/v1/trading/settings", headers=H(tok))
-    assert r.json()["pairs"] == ["SOL/USDT"]
+    assert r.json()["symbol"] == "XAUUSD"
+    # non-gold symbols are ignored — the bot only trades XAUUSD
+    r = client.put("/api/v1/trading/settings",
+                   json={"symbol": "BTC/USDT"}, headers=H(tok))
+    assert r.json()["symbol"] == "XAUUSD"
     # out-of-range stop-loss rejected by pydantic
     assert client.put("/api/v1/trading/settings",
                       json={"stop_loss_pct": 99}, headers=H(tok)).status_code == 422

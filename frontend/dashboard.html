@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>داشبورد | دستیار ترید</title>
+  <title>داشبورد طلا | دستیار ترید</title>
   <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" />
   <link rel="stylesheet" href="css/dashboard.css" />
 </head>
@@ -81,7 +81,7 @@
       <div class="grid-2">
         <div class="panel chart-panel">
           <div class="panel-head">
-            <h3>عملکرد دارایی — ۳۰ روز اخیر</h3>
+            <h3>عملکرد دارایی (ربات طلای MT5) — ۳۰ روز اخیر</h3>
             <select id="chartRange" class="mini-select">
               <option value="7">۷ روز</option>
               <option value="30" selected>۳۰ روز</option>
@@ -96,8 +96,9 @@
           <div class="bot-status" id="botStatusBox">
             <div class="status-big on" id="botBigStatus">● در حال اجرا</div>
             <ul class="bot-facts">
-              <li><span>صرافی متصل</span><strong id="botExchange" dir="ltr">Binance</strong></li>
-              <li><span>استراتژی</span><strong>متعادل (Mid-Risk)</strong></li>
+              <li><span>پلتفرم</span><strong id="botExchange" dir="ltr">MetaTrader 5</strong></li>
+              <li><span>نماد</span><strong id="botSymbol" dir="ltr">XAUUSD (طلا)</strong></li>
+              <li><span>استراتژی</span><strong>متعادل طلا (Mid-Risk)</strong></li>
               <li><span>حداکثر ریسک روزانه</span><strong>۳٪</strong></li>
               <li><span>آخرین معامله</span><strong id="lastTradeTime">—</strong></li>
             </ul>
@@ -120,7 +121,7 @@
           <table class="dtable">
             <thead>
               <tr>
-                <th>جفت‌ارز</th><th>جهت</th><th>حجم (USDT)</th><th>قیمت ورود</th>
+                <th>نماد</th><th>جهت</th><th>حجم (لات)</th><th>قیمت ورود</th>
                 <th>قیمت فعلی</th><th>سود/زیان</th><th>حد ضرر</th><th></th>
               </tr>
             </thead>
@@ -140,7 +141,7 @@
         <div class="table-wrap">
           <table class="dtable">
             <thead>
-              <tr><th>زمان</th><th>جفت‌ارز</th><th>جهت</th><th>حجم</th><th>سود/زیان</th><th>درصد</th><th>استراتژی</th></tr>
+              <tr><th>زمان</th><th>نماد</th><th>جهت</th><th>حجم (لات)</th><th>سود/زیان</th><th>درصد</th><th>استراتژی</th></tr>
             </thead>
             <tbody id="historyBody"><!-- JS fills --></tbody>
           </table>
@@ -174,14 +175,11 @@
           </div>
 
           <div class="field">
-            <label>جفت‌ارزهای فعال</label>
+            <label>نماد ربات</label>
             <div class="pairs" id="pairsBox">
-              <label class="pair on"><input type="checkbox" checked />BTC/USDT</label>
-              <label class="pair on"><input type="checkbox" checked />ETH/USDT</label>
-              <label class="pair"><input type="checkbox" />SOL/USDT</label>
-              <label class="pair"><input type="checkbox" />BNB/USDT</label>
-              <label class="pair"><input type="checkbox" />XRP/USDT</label>
+              <label class="pair on"><input type="radio" name="symbol" value="XAUUSD" checked />XAUUSD — طلا (تنها نماد فعال)</label>
             </div>
+            <p class="muted-note">این ربات به‌صورت تخصصی فقط روی طلا طراحی شده است؛ انتخاب نماد دیگر ممکن نیست.</p>
           </div>
 
           <div class="field">
@@ -199,7 +197,7 @@
     </section>
 
     <footer class="dash-foot">
-      ⚠️ داده‌های این داشبورد در حالت دمو شبیه‌سازی می‌شوند. ترید ارز دیجیتال دارای ریسک است؛ عملکرد گذشته تضمین‌کننده آینده نیست.
+      ⚠️ داده‌های این داشبورد در حالت دمو شبیه‌سازی می‌شوند. ترید طلا (XAUUSD) در متاتریدر ۵ با اهرم، دارای ریسک بالاست؛ عملکرد گذشته تضمین‌کننده آینده نیست.
     </footer>
   </div>
 
