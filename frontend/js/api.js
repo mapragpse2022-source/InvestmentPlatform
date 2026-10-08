@@ -59,4 +59,13 @@ const Api = {
   joinWaitlist: (email, source = "landing") =>
     apiFetch("/api/v1/waitlist", { method: "POST", body: { email, source } }),
   health: () => apiFetch("/health"),
+
+  /* Phase 5 — trading endpoints (require JWT) */
+  tradingOverview: () => apiFetch("/api/v1/trading/overview", { auth: true }),
+  tradingPositions: () => apiFetch("/api/v1/trading/positions", { auth: true }),
+  closePosition: (id) => apiFetch(`/api/v1/trading/positions/${id}/close`, { method: "POST", auth: true }),
+  tradingHistory: () => apiFetch("/api/v1/trading/history", { auth: true }),
+  getTradingSettings: () => apiFetch("/api/v1/trading/settings", { auth: true }),
+  saveTradingSettings: (body) => apiFetch("/api/v1/trading/settings", { method: "PUT", body, auth: true }),
+  setBotRunning: (running) => apiFetch("/api/v1/trading/bot", { method: "POST", body: { running }, auth: true }),
 };

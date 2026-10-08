@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.v1 import auth, waitlist
+from app.api.v1 import auth, trading, waitlist
 from app.core.config import get_settings
 from app.db import init_db
 
@@ -35,6 +35,13 @@ app.add_middleware(
 API_PREFIX = "/api/v1"
 app.include_router(auth.router, prefix=API_PREFIX)
 app.include_router(waitlist.router, prefix=API_PREFIX)
+app.include_router(trading.router, prefix=API_PREFIX)
+
+
+@app.get("/api/v1/health", tags=["meta"])
+def health_v1():
+    """Render health-check path."""
+    return {"status": "ok"}
 
 
 @app.get("/health", tags=["meta"])

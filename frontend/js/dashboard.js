@@ -140,8 +140,12 @@ const HISTORY = Array.from({ length: 14 }, (_, i) => {
 });
 
 /* ---------- KPIs ---------- */
-function currentPrice(pair) { return MARKET.find((m) => m.pair === pair)?.price || 0; }
+function currentPrice(pair) {
+  if (live?.ov?.prices?.[pair] != null) return live.ov.prices[pair];
+  return MARKET.find((m) => m.pair === pair)?.price || 0;
+}
 
+/* ---------- KPI helpers (offline demo mode) ---------- */
 function computeKpis() {
   const base = 12000;
   const openPnl = POSITIONS.reduce((s, p) => {
@@ -157,8 +161,31 @@ function computeKpis() {
 }
 
 function renderKpis() {
+  /* Server-driven mode (logged in + backend reachable) */
+  if (live) {
+    const ov = live.ov;
+    document.getElementById("kpiBalance").textContent = fmtUSD(ov.balance_usdt);
+    const deltaEl = document.getElementById("kpiBalanceDelta");
+    const dayChg = ov.total_pnl_pct;
+    deltaEl.textContent = (dayChg >= 0 ? "▲ +" : "▼ ") + toFa(dayChg.toFixed(2)) + "٪";
+    deltaEl.className = "kpi-delta " + (dayChg >= 0 ? "up" : "down");
+    const pnlEl = document.getElementById("kpiPnl");
+    pnlEl.textContent = (ov.total_pnl_usdt >= 0 ? "+" : "-") + fmtUSD(Math.abs(ov.total_pnl_usdt));
+    pnlEl.className = "kpi-value " + (ov.total_pnl_usdt >= 0 ? "pos" : "");
+    pnlEl.style.color = ov.total_pnl_usdt >= 0 ? "" : "var(--negative)";
+    document.getElementById("kpiTrades").textContent = toFa(ov.trades_today);
+    document.getElementById("kpiWinrate").textContent = toFa(Math.round(ov.win_rate_pct)) + "٪";
+    const lastEl = document.getElementById("lastTradeTime");
+    if (ov.last_trade_at) {
+      const d = new Date(ov.last_trade_at);
+      lastEl.textContent = toFa(d.toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" }));
+    } else lastEl.textContent = "—";
+    botToggle.checked = !!ov.running; applyBotState();
+    return;
+  }
+
+  /* Offline demo mode */
   const k = computeKpis();
-  document.getElementById("kpiBalance").textContent = fmtUSD(k.balance);
   const dayChg = ((k.balance - 12000) / 12000) * 100;
   const deltaEl = document.getElementById("kpiBalanceDelta");
   deltaEl.textContent = (dayChg >= 0 ? "▲ +" : "▼ ") + toFa(dayChg.toFixed(2)) + "٪ امروز";
@@ -173,9 +200,11 @@ function renderKpis() {
   document.getElementById("kpiWinrate").textContent = toFa(k.winrate) + "٪";
 
   const last = HISTORY[0];
-  document.getElementById("lastTradeTime").textContent =
-    toFa(last.time.toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" })) +
-    " — " + last.pair;
+  if (last) {
+    document.getElementById("lastTradeTime").textContent =
+      toFa(last.time.toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" })) +
+      " — " + last.pair;
+  }
 }
 
 /* ---------- Ticker ---------- */
@@ -316,9 +345,39 @@ document.getElementById("chartRange").addEventListener("change", (e) => {
   drawEquity();
 });
 
-/* ---------- Live tick simulation ---------- */
-setInterval(() => {
-  MARKET.forEach((m) => {
+/* ---------- Live tick: try backend simulator first, fall back to local ---------- */
+let live = null; // {balance, pnl, trades_today, win_rate, equity[], prices{}}
+
+async function refreshLive() {
+  if (!Auth.isLogged()) return false;
+  try {
+    const [ov, pos] = await Promise.all([Api.tradingOverview(), Api.tradingPositions()]);
+    live = { ov, pos: pos.items };
+    renderKpis(); renderTicker(); renderPositions(); renderHistoryFromLive();
+    if (document.getElementById("chartRange")) {
+      equitySeries = ov.equity_series && ov.equity_series.length > 1 ? ov.equity_series : equitySeries;
+      drawEquity();
+    }
+    return true;
+  } catch { return false; }
+}
+
+function renderHistoryFromLive() {
+  if (!live) return;
+  Api.tradingHistory().then((h) => {
+    HISTORY.length = 0;
+    h.items.forEach((t) => HISTORY.push({
+      time: new Date(t.closed_at), pair: t.pair, side: t.side.toUpperCase(),
+      size: t.size_usdt, pnl: t.pnl_usdt, pct: t.pnl_pct, strategy: t.strategy,
+    }));
+    renderHistory();
+  }).catch(() => {});
+}
+
+setInterval(async () => {
+  const ok = await refreshLive();
+  if (ok) return;                       // server data drives the UI
+  MARKET.forEach((m) => {              // offline fallback: local simulation
     m.price = Math.max(0.0001, m.price * (1 + (Math.random() * 2 - 1) * (m.vol / 100) * 0.15));
   });
   renderTicker(); renderPositions(); renderKpis();

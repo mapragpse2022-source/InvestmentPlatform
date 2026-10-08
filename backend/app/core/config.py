@@ -20,12 +20,19 @@ class Settings(BaseSettings):
     # Database (SQLite by default; swap to Postgres via DATABASE_URL)
     database_url: str = "sqlite:///./dastyar.db"
 
-    # CORS — frontend origins
-    cors_origins: list[str] = [
-        "http://localhost:8080",
-        "http://127.0.0.1:8080",
-        "https://mapragpse2022-source.github.io",
-    ]
+    # CORS — frontend origins. Overridable via env ALLOWED_ORIGINS
+    # (comma-separated, e.g. on Render dashboard).
+    allowed_origins: str | None = None
+
+    @property
+    def cors_origins(self) -> list[str]:
+        if self.allowed_origins:
+            return [o.strip() for o in self.allowed_origins.split(",") if o.strip()]
+        return [
+            "http://localhost:8080",
+            "http://127.0.0.1:8080",
+            "https://mapragpse2022-source.github.io",
+        ]
 
 
 @lru_cache

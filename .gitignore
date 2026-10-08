@@ -1,6 +1,5 @@
-.venv/
+(empty)
+# Python caches & local db
 __pycache__/
 *.pyc
 backend/dastyar.db
-backend/.env
-.pytest_cache/

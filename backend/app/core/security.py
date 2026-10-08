@@ -1,20 +1,39 @@
-"""Password hashing + JWT creation/validation."""
+"""Password hashing + JWT creation/validation.
+
+Note: we use the `bcrypt` package directly instead of passlib's CryptContext,
+because passlib is incompatible with bcrypt >= 4.1 (its version-string probe
+raises "password cannot be longer than 72 bytes" on every hash call).
+"""
+import base64
+import hashlib
 from datetime import datetime, timedelta, timezone
 
+import bcrypt
 import jwt
-from passlib.context import CryptContext
 
 from app.core.config import get_settings
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+_BCRYPT_MAX_BYTES = 72
+
+
+def _prehash(plain: str) -> bytes:
+    """SHA-256 pre-hash so any-length password maps to <=72 bcrypt-safe bytes.
+
+    Standard pattern used by FastAPI docs / Django / Spring Security.
+    """
+    digest = hashlib.sha256(plain.encode("utf-8")).digest()
+    return base64.b64encode(digest)
 
 
 def hash_password(plain: str) -> str:
-    return pwd_context.hash(plain)
+    return bcrypt.hashpw(_prehash(plain), bcrypt.gensalt()).decode("utf-8")
 
 
 def verify_password(plain: str, hashed: str) -> bool:
-    return pwd_context.verify(plain, hashed)
+    try:
+        return bcrypt.checkpw(_prehash(plain), hashed.encode("utf-8"))
+    except ValueError:
+        return False
 
 
 def create_access_token(subject: str) -> str:
