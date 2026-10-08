@@ -127,17 +127,50 @@ const Api = {
       throw err;
     }
   },
-  me: () => apiFetch("/api/v1/auth/me", { auth: true }),
+  async me() {
+    // offline demo token → read local user, never hit the server
+    if (Auth.token() === OFFLINE_TOKEN) {
+      const u = Auth.user();
+      if (!u) { const e = new Error("not logged in"); e.status = 401; throw e; }
+      return u;
+    }
+    return apiFetch("/api/v1/auth/me", { auth: true });
+  },
   joinWaitlist: (email, source = "landing") =>
     apiFetch("/api/v1/waitlist", { method: "POST", body: { email, source } }),
   health: () => apiFetch("/health"),
 
-  /* Phase 5 — trading endpoints (require JWT) */
-  tradingOverview: () => apiFetch("/api/v1/trading/overview", { auth: true }),
-  tradingPositions: () => apiFetch("/api/v1/trading/positions", { auth: true }),
-  closePosition: (id) => apiFetch(`/api/v1/trading/positions/${id}/close`, { method: "POST", auth: true }),
-  tradingHistory: () => apiFetch("/api/v1/trading/history", { auth: true }),
-  getTradingSettings: () => apiFetch("/api/v1/trading/settings", { auth: true }),
-  saveTradingSettings: (body) => apiFetch("/api/v1/trading/settings", { method: "PUT", body, auth: true }),
-  setBotRunning: (running) => apiFetch("/api/v1/trading/bot", { method: "POST", body: { running }, auth: true }),
+  /* Phase 5 — trading endpoints (require JWT).
+     In offline-demo mode we never call the server; dashboard.js has its own
+     local simulation fallbacks for these failures. */
+  async _trading(path, opts = {}) {
+    if (Auth.token() === OFFLINE_TOKEN) {
+      const e = new Error("offline-demo");
+      e.code = "OFFLINE";
+      throw e;
+    }
+    return apiFetch(path, { ...opts, auth: true });
+  },
+  tradingOverview: () => Api._trading("/api/v1/trading/overview"),
+  tradingPositions: () => Api._trading("/api/v1/trading/positions"),
+  closePosition: (id) => Api._trading(`/api/v1/trading/positions/${id}/close`, { method: "POST" }),
+  tradingHistory: () => Api._trading("/api/v1/trading/history"),
+  getTradingSettings: () => Api._trading("/api/v1/trading/settings"),
+  saveTradingSettings: (body) => Api._trading("/api/v1/trading/settings", { method: "PUT", body }),
+  setBotRunning: (running) => Api._trading("/api/v1/trading/bot", { method: "POST", body: { running } }),
 };
+
+/* ---------- Health probe + self-healing of stale tokens ----------
+   If the backend is unreachable OR our saved token is rejected with 401,
+   clear it so the user can log in fresh instead of being stuck in a loop. */
+async function ensureSession() {
+  if (!Auth.isLogged()) return false;
+  if (Auth.token() === OFFLINE_TOKEN) return true; // demo session is always "valid" locally
+  try {
+    await Api.me();
+    return true;
+  } catch (err) {
+    if (err.status === 401 || err.status === 403) Auth.clear();
+    return false;
+  }
+}

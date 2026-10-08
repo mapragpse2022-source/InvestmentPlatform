@@ -182,7 +182,7 @@ form.addEventListener("submit", async (ev) => {
       hasApiKey: !!document.getElementById("apiKey").value.trim(),
     }));
     showStep(TOTAL_STEPS); // mark all done visually
-    setTimeout(() => (window.location.href = "dashboard.html"), 600);
+    setTimeout(() => (window.location.href = "dashboard.html?login=1"), 600);
   } catch (err) {
     finishBtn.disabled = false;
     finishBtn.textContent = "اتصال و شروع ربات";

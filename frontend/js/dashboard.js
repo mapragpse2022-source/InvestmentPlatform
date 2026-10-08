@@ -28,9 +28,15 @@ if (!user && !params.get("login")) {
   // validate token against backend; refresh display name from server
   Api.me().then((fresh) => {
     user = Object.assign({}, user, { fullName: fresh.full_name, email: fresh.email, plan: fresh.plan });
-    localStorage.setItem(USER_KEY, JSON.stringify(user));
+    localStorage.setItem(USER_KEY || "dt_user", JSON.stringify(user));
     renderUser();
   }).catch(() => { /* offline or expired token → keep local copy */ });
+}
+
+/* If we arrive here right after signup (?login=1) with a saved session,
+   close the login modal automatically — the user is already authenticated. */
+if (params.get("login") === "1" && Auth.isLogged() && user) {
+  closeLogin();
 }
 
 document.getElementById("loginSubmit").addEventListener("click", async () => {
