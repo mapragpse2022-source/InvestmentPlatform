@@ -6,11 +6,20 @@
    ========================================================= */
 
 /* Auto-detect: on localhost keep local backend; anywhere else use the deployed Render URL */
+const DEPLOYED_API = "https://investmentplatform-0734.onrender.com";
+
 const DEFAULT_API =
   (typeof location !== "undefined" &&
    (location.hostname === "localhost" || location.hostname === "127.0.0.1"))
     ? "http://127.0.0.1:8000"
-    : "https://dastyar-backend.onrender.com";
+    : DEPLOYED_API;
+
+/* Clean up stale/wrong API URLs previously saved in localStorage
+   (e.g. the old non-existent "dastyar-backend" service caused 404s). */
+try {
+  const saved = localStorage.getItem("API_BASE_URL");
+  if (saved && saved.includes("dastyar-backend")) localStorage.removeItem("API_BASE_URL");
+} catch (_) {}
 
 const API_BASE =
   (typeof window !== "undefined" && window.API_BASE_URL) ||
