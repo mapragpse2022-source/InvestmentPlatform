@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="ربات ترید هوشمند دیجیتال — معامله خودکار، شفاف و امن در بازار ارزهای دیجیتال" />
+  <title>دستیار ترید | ربات معامله‌گر هوشمند</title>
+
+  <!-- Vazirmatn Font (RTL-friendly) -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ===================== Header / Navbar ===================== -->
+  <header class="navbar" id="top">
+    <div class="container navbar-inner">
+      <a href="#top" class="brand">
+        <span class="brand-icon">🤖</span>
+        <span class="brand-text">دستیار<b>ترید</b></span>
+      </a>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="#features" class="nav-link">امکانات</a>
+        <a href="#how" class="nav-link">نحوه عملکرد</a>
+        <a href="#stats" class="nav-link">عملکرد</a>
+        <a href="#pricing" class="nav-link">پلن‌ها</a>
+        <a href="#faq" class="nav-link">سوالات متداول</a>
+        <a href="#contact" class="nav-link nav-cta-secondary">تماس با ما</a>
+      </nav>
+
+      <div class="navbar-actions">
+        <a href="#pricing" class="btn btn-primary btn-sm">شروع کنید</a>
+        <button class="menu-toggle" id="menuToggle" aria-label="باز کردن منو">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===================== Hero ===================== -->
+    <section class="hero">
+      <div class="container hero-inner">
+        <div class="hero-content">
+          <span class="badge badge-glass">⚡ نسخه ۲.۰ منتشر شد — پشتیبانی از Binance و Bybit</span>
+          <h1 class="hero-title">
+            ترید <span class="gradient-text">خودکار، هوشمند و شبانه‌روزی</span>
+            با ربات معامله‌گر ما
+          </h1>
+          <p class="hero-subtitle">
+            ربات دستیار ترید با استفاده از استراتژی‌های الگوریتمی و تحلیل لحظه‌ای بازار،
+            به‌صورت ۲۴ ساعته بدون احساسات و بدون خطای انسانی برای شما معامله می‌کند.
+            سرمایه شما همیشه تحت کنترل و قابل مشاهده است.
+          </p>
+          <div class="hero-buttons">
+            <a href="#pricing" class="btn btn-primary btn-lg">رایگان شروع کنید</a>
+            <a href="#how" class="btn btn-ghost btn-lg">▶ مشاهده نحوه عملکرد</a>
+          </div>
+          <ul class="hero-trust">
+            <li>✓ بدون دسترسی برداشت</li>
+            <li>✓ کلید API رمزنگاری‌شده</li>
+            <li>✓ غیرفعال کردن آنی با یک کلیک</li>
+          </ul>
+        </div>
+
+        <div class="hero-visual">
+          <div class="mockup-card glass">
+            <div class="mockup-header">
+              <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+              <span class="mockup-title">داشبورد ربات — BTC/USDT</span>
+            </div>
+            <div class="mockup-body">
+              <div class="mockup-row">
+                <div>
+                  <div class="mock-label">دارایی تحت مدیریت</div>
+                  <div class="mock-value">$12,480.55</div>
+                </div>
+                <div class="mock-trend up">▲ +۱۸.۴٪</div>
+              </div>
+              <canvas id="heroChart" class="mock-chart" height="140"></canvas>
+              <div class="mock-stats">
+                <div><span>معاملات امروز</span><strong>۳۷</strong></div>
+                <div><span>نرخ برد</span><strong>۷۲٪</strong></div>
+                <div><span>وضعیت ربات</span><strong class="status-on">● فعال</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== Stats Bar ===================== -->
+    <section class="stats" id="stats">
+      <div class="container stats-grid">
+        <div class="stat-item">
+          <div class="stat-number" data-count="2400">+۰</div>
+          <div class="stat-label">کاربر فعال</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-count="18">+۰</div>
+          <div class="stat-label">ماه سابقه معاملاتی</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-count="72">۰٪</div>
+          <div class="stat-label">میانگین نرخ برد معاملات</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-count="99">۹۹٪</div>
+          <div class="stat-label">آپ‌تایم سرویس</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== Features ===================== -->
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-head">
+          <h2>چرا ربات دستیار ترید؟</h2>
+          <p>امکاناتی که آن را از ترید دستی و ربات‌های آماده اینستاگرامی متمایز می‌کند.</p>
+        </div>
+
+        <div class="features-grid">
+          <article class="feature-card">
+            <div class="feature-icon">🧠</div>
+            <h3>استراتژی هوشمند</h3>
+            <p>ترکیب اندیکاتورهای تکنیکال، حجم و نوسان‌گیری با مدل‌های یاد ماشین برای ورود و خروج به‌موقع.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">🔒</div>
+            <h3>امنیت سرمایه</h3>
+            <p>ربات فقط اجازه «معامله» دارد، نه «برداشت». کلیدهای API شما با رمزنگاری AES-256 نگهداری می‌شوند.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>داشبورد شفاف</h3>
+            <p>همه معاملات، سود و زیان لحظه‌ای قابل مشاهده و قابل خروجی گرفتن است. چیزی پنهان نیست.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">⏰</div>
+            <h3>فعالیت ۲۴/۷</h3>
+            <p>بازار کریپتو خواب ندارد؛ ربات هم ندارد. بدون خستگی، بدون تصمیم احساسی، بدون FOMO.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">🛡️</div>
+            <h3>مدیریت ریسک</h3>
+            <p>حد ضرر (Stop-Loss)، حد سود و حداکثر ریسک روزانه قابل تنظیم. در شرایط بحرانی، ربات خودکار متوقف می‌شود.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">🔔</div>
+            <h3>اعلان لحظه‌ای</h3>
+            <p>هر معامله مهم بلافاصله از طریق ایمیل و تلگرام به شما اطلاع داده می‌شود.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== How It Works ===================== -->
+    <section class="section section-alt" id="how">
+      <div class="container">
+        <div class="section-head">
+          <h2>در سه قدم ساده شروع کنید</h2>
+          <p>راه‌اندازی کمتر از ۱۰ دقیقه، بدون نیاز به دانش برنامه‌نویسی.</p>
+        </div>
+
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-num">۱</div>
+            <h3>اکانت صرافی خود را متصل کنید</h3>
+            <p>یک کلید API فقط-معامله‌ای از Binance یا Bybit بسازید و در داشبورد وارد کنید. دسترسی برداشت را ببندید.</p>
+          </div>
+          <div class="step-divider"></div>
+          <div class="step-card">
+            <div class="step-num">۲</div>
+            <h3>استراتژی و ریسک را انتخاب کنید</h3>
+            <p>سطح ریسک (محافظه‌کار / متعادل / تهاجمی) و جفت‌ارزهای موردنظر را مشخص کنید.</p>
+          </div>
+          <div class="step-divider"></div>
+          <div class="step-card">
+            <div class="step-num">۳</div>
+            <h3>ربات را روشن کنید</h3>
+            <p>با یک کلیک ترید خودکار آغاز می‌شود. هر زمان خواستید با همان سرعت متوقفش کنید.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== Pricing ===================== -->
+    <section class="section" id="pricing">
+      <div class="container">
+        <div class="section-head">
+          <h2>پلن‌های اشتراک</h2>
+          <p>بدون قرارداد بلندمدت. لغو هر زمان، بدون کارمزد پنهان.</p>
+        </div>
+
+        <div class="pricing-grid">
+          <div class="price-card">
+            <h3>پایه</h3>
+            <div class="price"><span class="amount">۰</span> <span class="currency">تومان / ماه</span></div>
+            <ul class="price-list">
+              <li>✓ حداکثر ۲ جفت‌ارز</li>
+              <li>✓ استراتژی محافظه‌کارانه</li>
+              <li>✓ داشبورد پایه</li>
+              <li class="muted">✗ اعلان تلگرام</li>
+              <li class="muted">✗ پشتیبانی اختصاصی</li>
+            </ul>
+            <a href="#contact" class="btn btn-ghost btn-block">شروع رایگان</a>
+          </div>
+
+          <div class="price-card featured">
+            <div class="ribbon">محبوب‌ترین</div>
+            <h3>حرفه‌ای</h3>
+            <div class="price"><span class="amount">۴۹۰</span> <span class="currency">هزار تومان / ماه</span></div>
+            <ul class="price-list">
+              <li>✓ حداکثر ۱۰ جفت‌ارز</li>
+              <li>✓ همه استراتژی‌ها</li>
+              <li>✓ مدیریت ریسک پیشرفته</li>
+              <li>✓ اعلان تلگرام و ایمیل</li>
+              <li>✓ پشتیبانی در اولویت</li>
+            </ul>
+            <a href="#contact" class="btn btn-primary btn-block">انتخاب پلن حرفه‌ای</a>
+          </div>
+
+          <div class="price-card">
+            <h3>سرمایه‌گذار</h3>
+            <div class="price"><span class="amount">۹۹۰</span> <span class="currency">هزار تومان / ماه</span></div>
+            <ul class="price-list">
+              <li>✓ جفت‌ارز نامحدود</li>
+              <li>✓ استراتژی شخصی‌سازی‌شده</li>
+              <li>✓ گزارش‌دهی مالیاتی</li>
+              <li>✓ مدیر حساب اختصاصی</li>
+              <li>✓ دسترسی زودهنگام به فیچرها</li>
+            </ul>
+            <a href="#contact" class="btn btn-ghost btn-block">مشاوره رایگان</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== FAQ ===================== -->
+    <section class="section section-alt" id="faq">
+      <div class="container narrow">
+        <div class="section-head">
+          <h2>سوالات متداول</h2>
+        </div>
+
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary>آیا ربات به پول من دسترسی دارد؟</summary>
+            <p>خیر. کلید API شما فقط مجوز «معامله» دارد و مجوز «برداشت» عملاً بسته می‌شود. دارایی همیشه در حساب صرافی خودتان است.</p>
+          </details>
+          <details class="faq-item">
+            <summary>آیا سود تضمینی است؟</summary>
+            <p>هیچ سرویس مالی نمی‌تواند سود را تضمین کند. ترید با ریسک همراه است. عملکرد گذشته نشان‌دهنده آینده نیست. حتماً بخش «افشاگری ریسک» را مطالعه کنید.</p>
+          </details>
+          <details class="faq-item">
+            <summary>حداقل سرمایه چقدر است؟</summary>
+            <p>فنی‌طور حداقل ۱۰۰ دلار توصیه می‌شود تا مدیریت ریسک معنادار باشد، ولی الزامی وجود ندارد.</p>
+          </details>
+          <details class="faq-item">
+            <summary>اگر بخواهم متوقف کنم چه؟</summary>
+            <p>با یک دکمه در داشبورد، ربات متوقف و پوزیشن‌های باز در حد ضرر ایمن بسته می‌شوند.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== CTA ===================== -->
+    <section class="cta-banner" id="contact">
+      <div class="container cta-inner">
+        <div>
+          <h2>امروز شروع کنید، فردا ربات برایتان کار می‌کند</h2>
+          <p>پلن رایگان بدون نیاز به کارت بانکی. راه‌اندازی ۱۰ دقیقه‌ای.</p>
+        </div>
+        <form class="cta-form" id="ctaForm">
+          <input type="email" placeholder="ایمیل شما" required />
+          <button type="submit" class="btn btn-primary">درخواست دسترسی</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== Footer ===================== -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <div class="brand">
+          <span class="brand-icon">🤖</span>
+          <span class="brand-text">دستیار<b>ترید</b></span>
+        </div>
+        <p class="footer-desc">ربات معامله‌گر هوشمند برای بازار ارزهای دیجیتال — شفاف، امن و تحت کنترل شما.</p>
+      </div>
+      <div>
+        <h4>لینک‌ها</h4>
+        <a href="#features">امکانات</a>
+        <a href="#how">نحوه عملکرد</a>
+        <a href="#pricing">پلن‌ها</a>
+      </div>
+      <div>
+        <h4>قانونی</h4>
+        <a href="#">حریم خصوصی</a>
+        <a href="#">شرایط استفاده</a>
+        <a href="#">افشاگری ریسک</a>
+      </div>
+      <div>
+        <h4>ارتباط</h4>
+        <a href="mailto:info@dastyartrade.example">info@dastyartrade.example</a>
+        <a href="#">تلگرام</a>
+        <a href="#">توییتر / X</a>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      © ۲۰۲۶ دستیار ترید — تمامی حقوق محفوظ است. ترید ارز دیجیتال دارای ریسک است.
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
