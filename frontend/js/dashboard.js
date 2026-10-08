@@ -11,9 +11,9 @@ const LS = { user: "dt_user", settings: "dt_bot_settings" };
 const toFa = (s) => String(s).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[d]);
 const fmtUSD = (n) => "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-/* ================= Auth / login modal ================= */
+/* ================= Auth / login modal (real backend when available) ================= */
 const params = new URLSearchParams(location.search);
-let user = JSON.parse(localStorage.getItem(LS.user) || "null");
+let user = Auth.user() || JSON.parse(localStorage.getItem(LS.user) || "null");
 
 const loginModal = document.getElementById("loginModal");
 
@@ -24,22 +24,43 @@ if (!user && params.get("login") === "1") openLogin();
 if (!user && !params.get("login")) {
   // مهمان: با کاربر دمو ادامه می‌دهیم (دمو — در نسخه واقعی redirect به signup می‌شود)
   user = { fullName: "کاربر مهمان", email: "guest@demo.local", exchange: "binance" };
+} else if (Auth.isLogged()) {
+  // validate token against backend; refresh display name from server
+  Api.me().then((fresh) => {
+    user = Object.assign({}, user, { fullName: fresh.full_name, email: fresh.email, plan: fresh.plan });
+    localStorage.setItem(USER_KEY, JSON.stringify(user));
+    renderUser();
+  }).catch(() => { /* offline or expired token → keep local copy */ });
 }
 
-document.getElementById("loginSubmit").addEventListener("click", () => {
+document.getElementById("loginSubmit").addEventListener("click", async () => {
   const email = document.getElementById("loginEmail").value.trim();
+  const pass = document.getElementById("loginPass").value;
+  const errEl = document.getElementById("loginError");
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
-    document.getElementById("loginError").textContent = "ایمیل معتبر وارد کنید.";
+    errEl.textContent = "ایمیل معتبر وارد کنید.";
     return;
   }
-  const saved = JSON.parse(localStorage.getItem(LS.user) || "null");
-  user = saved && saved.email === email ? saved : { fullName: email.split("@")[0], email, exchange: "binance" };
-  localStorage.setItem(LS.user, JSON.stringify(user));
-  closeLogin();
-  renderUser();
+  const btn = document.getElementById("loginSubmit");
+  btn.disabled = true;
+  try {
+    const session = await Api.login({ email, password: pass });
+    Auth.save(session);
+    user = { fullName: session.user.full_name, email: session.user.email,
+             exchange: (JSON.parse(localStorage.getItem("dt_exchange") || "{}").exchange) || "binance" };
+    closeLogin();
+    renderUser();
+  } catch (err) {
+    errEl.textContent = err.status === 401
+      ? "ایمیل یا رمز عبور نادرست است."
+      : (err.message && !err.message.includes("Failed to fetch") ? err.message : "سرور در دسترس نیست.");
+  } finally {
+    btn.disabled = false;
+  }
 });
 
 document.getElementById("logoutBtn").addEventListener("click", () => {
+  Auth.clear();
   localStorage.removeItem(LS.user);
   location.href = "index.html";
 });

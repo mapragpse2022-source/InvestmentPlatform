@@ -131,16 +131,34 @@ if (menuToggle && navLinks) {
   targets.forEach((t) => io.observe(t));
 })();
 
-/* ---------- 5. CTA form (placeholder until backend) ---------- */
+/* ---------- 5. CTA form → real backend (POST /api/v1/waitlist) ---------- */
 const ctaForm = document.getElementById("ctaForm");
 if (ctaForm) {
-  ctaForm.addEventListener("submit", (ev) => {
+  ctaForm.addEventListener("submit", async (ev) => {
     ev.preventDefault();
     const input = ctaForm.querySelector("input");
     const email = input.value.trim();
     if (!email) return;
-    // TODO: POST to /api/v1/waitlist once backend exists (see docs ARCH-005 API Design)
-    alert(`✅ درخواست شما ثبت شد: ${email}\nبه‌زودی از طریق ایمیل در ارتباط خواهیم بود.`);
-    ctaForm.reset();
+
+    const btn = ctaForm.querySelector("button");
+    const original = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = "در حال ثبت…";
+
+    try {
+      await Api.joinWaitlist(email, "landing");
+      alert(`✅ درخواست شما ثبت شد: ${email}\nبه‌زودی از طریق ایمیل در ارتباط خواهیم بود.`);
+      ctaForm.reset();
+    } catch (err) {
+      // Backend offline → keep working in demo mode (localStorage)
+      const saved = JSON.parse(localStorage.getItem("dt_waitlist") || "[]");
+      if (!saved.includes(email)) saved.push(email);
+      localStorage.setItem("dt_waitlist", JSON.stringify(saved));
+      alert(`⚠️ سرور در دسترس نبود؛ درخواست شما به‌صورت محلی ذخیره شد.\n(${err.message})`);
+      ctaForm.reset();
+    } finally {
+      btn.disabled = false;
+      btn.textContent = original;
+    }
   });
 }

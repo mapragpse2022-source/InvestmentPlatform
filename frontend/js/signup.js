@@ -4,7 +4,7 @@
    On success → saves user to localStorage → redirects to dashboard.html
    ========================================================= */
 
-const LS_KEY = "dt_user";
+/* user session is stored by Auth.save() from js/api.js (keys: dt_token / dt_user) */
 
 let currentStep = 1;
 const TOTAL_STEPS = 3;
@@ -156,24 +156,45 @@ document.getElementById("resendBtn").addEventListener("click", () => {
   startResendTimer();
 });
 
-/* ---------- final submit ---------- */
-form.addEventListener("submit", (ev) => {
+/* ---------- final submit → real backend (POST /api/v1/auth/signup) ---------- */
+form.addEventListener("submit", async (ev) => {
   ev.preventDefault();
   if (!validateStep(3)) return;
 
-  const user = {
-    fullName: document.getElementById("fullName").value.trim(),
+  const payload = {
+    full_name: document.getElementById("fullName").value.trim(),
     email: document.getElementById("email").value.trim(),
     phone: document.getElementById("phone").value.trim(),
-    exchange: document.querySelector('input[name="exchange"]:checked').value,
-    hasApiKey: !!document.getElementById("apiKey").value.trim(),
-    verifiedAt: new Date().toISOString(),
+    password: document.getElementById("password").value,
+    plan: "free",
+    accept_risk: true, // step-3 "noWithdraw" checkbox doubles as risk disclosure confirm
   };
-  // ⚠️ DEMO ONLY — هرگز رمز عبور یا کلید API را در localStorage ذخیره نکنید!
-  localStorage.setItem(LS_KEY, JSON.stringify(user));
 
-  showStep(TOTAL_STEPS); // mark all done visually
-  setTimeout(() => (window.location.href = "dashboard.html"), 600);
+  finishBtn.disabled = true;
+  finishBtn.textContent = "در حال ثبت…";
+
+  try {
+    const session = await Api.signup(payload);
+    Auth.save(session); // token + user in localStorage (JWT — no password stored!)
+    localStorage.setItem("dt_exchange", JSON.stringify({
+      exchange: document.querySelector('input[name="exchange"]:checked').value,
+      hasApiKey: !!document.getElementById("apiKey").value.trim(),
+    }));
+    showStep(TOTAL_STEPS); // mark all done visually
+    setTimeout(() => (window.location.href = "dashboard.html"), 600);
+  } catch (err) {
+    finishBtn.disabled = false;
+    finishBtn.textContent = "اتصال و شروع ربات";
+    if (err.status === 409) {
+      setError("email", "این ایمیل قبلاً ثبت‌نام کرده است — وارد شوید.");
+      showStep(1);
+    } else if (err.status >= 500 || err.message.includes("Failed to fetch")) {
+      alert("⚠️ سرور در دسترس نیست. لطفاً مطمئن شوید بک‌اند اجراست (backend: uvicorn).");
+    } else {
+      setError("email", err.message || "خطای نامشخص");
+      showStep(1);
+    }
+  }
 });
 
 showStep(1);
