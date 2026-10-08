@@ -176,6 +176,7 @@ form.addEventListener("submit", async (ev) => {
   try {
     const session = await Api.signup(payload);
     Auth.save(session); // token + user in localStorage (JWT — no password stored!)
+    if (err_isOffline(session)) showOfflineToast();
     localStorage.setItem("dt_exchange", JSON.stringify({
       exchange: document.querySelector('input[name="exchange"]:checked').value,
       hasApiKey: !!document.getElementById("apiKey").value.trim(),
@@ -189,12 +190,24 @@ form.addEventListener("submit", async (ev) => {
       setError("email", "این ایمیل قبلاً ثبت‌نام کرده است — وارد شوید.");
       showStep(1);
     } else if (err.status >= 500 || err.message.includes("Failed to fetch")) {
-      alert("⚠️ سرور در دسترس نیست. لطفاً مطمئن شوید بک‌اند اجراست (backend: uvicorn).");
+      alert("⚠️ خطای غیرمنتظره هنگام ثبت‌نام. لطفاً دوباره تلاش کنید.");
     } else {
       setError("email", err.message || "خطای نامشخص");
       showStep(1);
     }
   }
 });
+
+/* small helpers for offline-mode UX */
+function err_isOffline(session) { return session && session.access_token === OFFLINE_TOKEN; }
+function showOfflineToast() {
+  const t = document.createElement("div");
+  t.textContent = "📡 سرور آنلاین در دسترس نبود — حساب شما به‌صورت محلی (دمو) ساخته شد.";
+  t.style.cssText = "position:fixed;bottom:24px;left:50%;transform:translateX(-50%);" +
+    "background:#1e293b;color:#e2e8f0;padding:12px 22px;border-radius:12px;" +
+    "border:1px solid rgba(255,255,255,.15);z-index:9999;font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.4);";
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 5000);
+}
 
 showStep(1);

@@ -5,10 +5,17 @@
    Usage: include <script src="js/api.js"></script> BEFORE page scripts.
    ========================================================= */
 
+/* Auto-detect: on localhost keep local backend; anywhere else use the deployed Render URL */
+const DEFAULT_API =
+  (typeof location !== "undefined" &&
+   (location.hostname === "localhost" || location.hostname === "127.0.0.1"))
+    ? "http://127.0.0.1:8000"
+    : "https://dastyar-backend.onrender.com";
+
 const API_BASE =
   (typeof window !== "undefined" && window.API_BASE_URL) ||
   localStorage.getItem("API_BASE_URL") ||
-  "http://127.0.0.1:8000";
+  DEFAULT_API;
 
 const TOKEN_KEY = "dt_token";
 const USER_KEY = "dt_user";
@@ -51,10 +58,66 @@ async function apiFetch(path, { method = "GET", body = null, auth = false } = {}
   return data;
 }
 
+/* ---------- Offline fallback (localStorage) ----------
+   Used automatically when the backend server is unreachable,
+   so signup/login keep working even before deployment. */
+const OFFLINE_TOKEN = "offline-demo-token";
+
+const Offline = {
+  _users: () => {
+    try { return JSON.parse(localStorage.getItem("dt_offline_users") || "[]"); }
+    catch { return []; }
+  },
+  _saveUsers: (u) => localStorage.setItem("dt_offline_users", JSON.stringify(u)),
+  signup(payload) {
+    const users = this._users();
+    if (users.some((x) => x.email === payload.email)) {
+      const e = new Error("این ایمیل قبلاً ثبت‌نام کرده است — وارد شوید.");
+      e.status = 409; throw e;
+    }
+    const user = {
+      id: Date.now(), full_name: payload.full_name, email: payload.email,
+      phone: payload.phone, plan: payload.plan || "free", created_at: new Date().toISOString(),
+    };
+    users.push({ ...user, password: payload.password }); // local-only demo store
+    this._saveUsers(users);
+    return { access_token: OFFLINE_TOKEN, token_type: "bearer", user };
+  },
+  login(email, pass) {
+    const found = this._users().find(
+      (x) => x.email === email && (!pass || x.password === pass)
+    );
+    if (!found) {
+      const e = new Error("ایمیل یا رمز عبور اشتباه است (یا حساب آفلاین نیست).");
+      e.status = 401; throw e;
+    }
+    const user = { id: found.id, full_name: found.full_name, email: found.email, phone: found.phone, plan: found.plan };
+    return { access_token: OFFLINE_TOKEN, token_type: "bearer", user };
+  },
+};
+
 /* --- Endpoint helpers --- */
 const Api = {
-  signup: (payload) => apiFetch("/api/v1/auth/signup", { method: "POST", body: payload }),
-  login: (payload) => apiFetch("/api/v1/auth/login", { method: "POST", body: payload }),
+  async signup(payload) {
+    try {
+      return await apiFetch("/api/v1/auth/signup", { method: "POST", body: payload });
+    } catch (err) {
+      if (err.message.includes("Failed to fetch")) {
+        return Offline.signup(payload); // throws 409 itself if email is a duplicate
+      }
+      throw err;
+    }
+  },
+  async login(payload) {
+    try {
+      return await apiFetch("/api/v1/auth/login", { method: "POST", body: payload });
+    } catch (err) {
+      if (err.message.includes("Failed to fetch")) {
+        return Offline.login(payload.email, payload.password);
+      }
+      throw err;
+    }
+  },
   me: () => apiFetch("/api/v1/auth/me", { auth: true }),
   joinWaitlist: (email, source = "landing") =>
     apiFetch("/api/v1/waitlist", { method: "POST", body: { email, source } }),
